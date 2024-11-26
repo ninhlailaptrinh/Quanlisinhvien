@@ -5,16 +5,16 @@
  *============================================================================*/
 
 #include <stdio.h>
-#include <stdlib.h>
+//#include <stdlib.h>
 #include <string.h>
 
 /*==============================================================================
  * ĐỊNH NGHĨA CẤU TRÚC DỮ LIỆU
  *============================================================================*/
 struct date {
-    unsigned char ngay;
-    unsigned char thang;
-    unsigned int nam;
+    int ngay;
+    int thang;
+    int nam;
 };
 
 struct sinhVien {
@@ -73,9 +73,42 @@ void nhapSinhVien(struct sinhVien *sv) {
     printf("\nMã SV: ");
     scanf("%s", sv->maSv);
     getchar();
-    printf("Họ tên: ");
+    printf("\nHọ tên: ");
     fgets(sv->hoTen, sizeof(sv->hoTen), stdin);
     sv->hoTen[strcspn(sv->hoTen, "\n")] = 0;
+	printf("\nNgày tốt nghiệp dự kiến (ngày/tháng/năm):");
+	scanf("%d %d %d",&sv->ngayTN.ngay,&sv->ngayTN.thang,&sv->ngayTN.nam);
+	getchar();
+	printf("\nLớp: ");
+	fgets(sv->lop,sizeof(sv->lop),stdin);
+	sv->lop[strcspn(sv->lop, "\n")] = 0 ;
+	printf("\nNgành: ");
+	fgets(sv->Nganh,sizeof(sv->Nganh),stdin);
+	sv->Nganh[strcspn(sv->Nganh, "\n")] = 0 ;
+	printf("\nĐiểm trung bình: ");
+	scanf("%f",&sv->diemTB);
+	getchar();
+	printf("\nQuê quán: ");
+	fgets(sv->queQuan,sizeof(sv->queQuan),stdin);
+	sv->queQuan[strcspn(sv->queQuan, "\n")] = 0 ;
+	printf("\nSố điện thoại: ");
+	fgets(sv->soDT,sizeof(sv->soDT),stdin);
+	sv->soDT[strcspn(sv->soDT, "\n")] = 0 ;
+	printf("\nEmail: ");
+	fgets(sv->email,sizeof(sv->email),stdin);
+	sv->email[strcspn(sv->email, "\n")] = 0 ;
+	printf("\nĐiểm rèn luyện: ");
+	scanf("%f",&sv->diemRL);
+	getchar();
+	printf("\nSố tín chỉ: ");
+	scanf("%d",&sv->soTinChi);
+	getchar();
+	printf("\nTrạng thái: ");
+	fgets(sv->trangThai,sizeof(sv->trangThai), stdin);
+	sv->trangThai[strcspn(sv->trangThai, "\n")] = 0 ; 	
+	printf("\nHọc phí: ");
+	scanf("%f",&sv->hocPhi);
+	getchar();	
     // ... các trường khác tương tự
 }
 
@@ -90,10 +123,18 @@ void xuatSinhVien(struct sinhVien sv) {
     printf("Mã SV: %s\n", sv.maSv);
     printf("Họ tên: %s\n", sv.hoTen);
     printf("Ngày TN: %d/%d/%d\n", sv.ngayTN.ngay, sv.ngayTN.thang, sv.ngayTN.nam);
+	printf("Lớp: %s\n",sv.lop);
+	printf("Ngành: %s\n",sv.Nganh);
+	printf("Điểm trung bình: %f\n",sv.diemTB);
+	printf("Quê quán : %s\n",sv.queQuan);
+	printf("Số điện thoại: %s\n",sv.soDT);
+	printf("Email: %s\n",sv.email);
+	printf("Điểm rèn luyện: %f\n",sv.diemRL);
+	printf("Số tín chỉ: %d\n",sv.soTinChi);
+	printf("Trạng thái: %s\n",sv.trangThai);
+	printf("Học phí: %f\n",sv.hocPhi);
 	// Thêm các trường dữ liệu tương tự vô đây .... 
-    // ... xuất các thông tin khác
 }
-
 /**
  * Nhập danh sách sinh viên
  * @param ds Mảng sinh viên
@@ -187,8 +228,9 @@ void capNhatSinhVien(struct sinhVien ds[], int n, char maSV[]) {
 /*==============================================================================
  * HÀM MAIN - ĐIỀU KHIỂN CHƯƠNG TRÌNH
  *============================================================================*/
-// Để chạy file test cần đổi file main.c thành mainProgram.c
-int main() {
+// Để chạy file test cần đổi hàm main thành mainProgram
+// Để chạy file test cần đổi tên hàm main thành mainProgram
+int main /*mainProgram*/() {
     struct sinhVien dsSV[100];
     int soLuong = 0;
     int luaChon, luaChonPhu;
@@ -251,7 +293,7 @@ int main() {
                     case 5:
                         xuatDanhSach(dsSV, soLuong);
                         break;
-                }
+                };
                 break;
             // Các case khác sẽ được xử lý sau...
         }
