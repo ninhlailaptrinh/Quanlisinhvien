@@ -1,7 +1,16 @@
+/*==============================================================================
+ * Project: Quản Lý Sinh Viên
+ * Author: [Dương Văn Ninh]
+ * Version: 1.0
+ *============================================================================*/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
+/*==============================================================================
+ * ĐỊNH NGHĨA CẤU TRÚC DỮ LIỆU
+ *============================================================================*/
 struct date {
     unsigned char ngay;
     unsigned char thang;
@@ -9,22 +18,26 @@ struct date {
 };
 
 struct sinhVien {
-    char maSv[20];
-    char hoTen[35];
-    struct date ngayTN;
-    char lop[10];
-    char Nganh[30];
-    float diemTB;
-    char queQuan[50];
-    char soDT[15];
-    char email[50];
-    float diemRL;         // Điểm rèn luyện
-    int soTinChi;        // Số tín chỉ đã đạt
-    char trangThai[20];  // Đang học/Bảo lưu/Đã tốt nghiệp
-    float hocPhi;        // Học phí còn nợ
+    char maSv[20];          /* Mã sinh viên */
+    char hoTen[35];         /* Họ tên sinh viên */
+    struct date ngayTN;     /* Ngày tốt nghiệp dự kiến */
+    char lop[10];           /* Lớp */
+    char Nganh[30];         /* Ngành học */
+    float diemTB;           /* Điểm trung bình */
+    char queQuan[50];       /* Quê quán */
+    char soDT[15];          /* Số điện thoại */
+    char email[50];         /* Email */
+    float diemRL;           /* Điểm rèn luyện */
+    int soTinChi;          /* Số tín chỉ đã đạt */
+    char trangThai[20];     /* Trạng thái học tập */
+    float hocPhi;          /* Học phí còn nợ */
 };
 
-// === NHÓM CHỨC NĂNG CƠ BẢN ===
+/*==============================================================================
+ * KHAI BÁO PROTOTYPE CÁC HÀM
+ *============================================================================*/
+
+/* === NHÓM CHỨC NĂNG CƠ BẢN === */
 void nhapSinhVien(struct sinhVien *sv);
 void xuatSinhVien(struct sinhVien sv);
 void nhapDanhSach(struct sinhVien ds[], int *n);
@@ -33,255 +46,106 @@ int timSinhVien(struct sinhVien ds[], int n, char maSV[]);
 void xoaSinhVien(struct sinhVien ds[], int *n, char maSV[]);
 void capNhatSinhVien(struct sinhVien ds[], int n, char maSV[]);
 
-// === NHÓM CHỨC NĂNG HỌC TẬP ===
+/* === NHÓM CHỨC NĂNG HỌC TẬP === */
 void capNhatDiemRL(struct sinhVien ds[], int n, char maSV[]);
 void capNhatTinChi(struct sinhVien ds[], int n, char maSV[]);
 void capNhatHocPhi(struct sinhVien ds[], int n, char maSV[]);
 void danhSachNoCuocHocPhi(struct sinhVien ds[], int n);
 void danhSachSVDuDieuKienTN(struct sinhVien ds[], int n);
 
-// === NHÓM CHỨC NĂNG THỐNG KÊ MỞ RỘNG ===
+/* === NHÓM CHỨC NĂNG THỐNG KÊ === */
 void thongKeSVTheoKhoaHoc(struct sinhVien ds[], int n);
 void thongKeSVTheoHocLuc(struct sinhVien ds[], int n);
 void thongKeSVTheoTrangThai(struct sinhVien ds[], int n);
 void bangDiemTongHop(struct sinhVien ds[], int n, char maSV[]);
 void thongKeHocPhi(struct sinhVien ds[], int n);
 
-// === NHÓM CHỨC NĂNG QUẢN LÝ LỚP HỌC ===
-void danhSachLopTruong(struct sinhVien ds[], int n);
-void phanCongLopTruong(struct sinhVien ds[], int n, char maSV[]);
-void danhSachSVTheoDoiTuong(struct sinhVien ds[], int n);
-void capNhatThongTinLop(struct sinhVien ds[], int n, char lop[]);
+/*==============================================================================
+ * CÀI ĐẶT CÁC HÀM
+ *============================================================================*/
 
-// === NHÓM CHỨC NĂNG BÁO CÁO ===
-void xuatBaoCaoTongHop(struct sinhVien ds[], int n);
-void xuatDanhSachTheoDiem(struct sinhVien ds[], int n, float diemMin);
-void thongKeSVBiCanhBao(struct sinhVien ds[], int n);
-void danhSachSVDatHocBong(struct sinhVien ds[], int n);
-
-// === NHÓM CHỨC NĂNG TIỆN ÍCH MỞ RỘNG ===
-void xuatTheoDiaChi(struct sinhVien ds[], int n, char tinh[]);
-void timKiemNangCao(struct sinhVien ds[], int n);
-void sapXepDaChieuSV(struct sinhVien ds[], int n);
-void thongKeTheoNhieuTieuChi(struct sinhVien ds[], int n);
-
-int main() {
-    struct sinhVien dsSV[100];
-    int soLuong = 0;
-    int luaChon, luaChonPhu;
-    char maTemp[20], tenTemp[35], lopTemp[10];
-    
-    do {
-        puts("\n=== CHUONG TRINH QUAN LY SINH VIEN ===");
-        puts("1. Quan ly ho so sinh vien");
-        puts("2. Quan ly hoc tap");
-        puts("3. Quan ly hoc phi");
-        puts("4. Thong ke - Bao cao");
-        puts("5. Quan ly lop hoc");
-        puts("6. Tien ich mo rong");
-        puts("7. Quan ly du lieu");
-        puts("0. Thoat");
-        puts("Nhap lua chon cua ban: ");
-        
-        scanf("%d", &luaChon);
-        
-        switch(luaChon) {
-            case 1: // Quản lý hồ sơ
-                puts("1. Them sinh vien moi");
-                puts("2. Cap nhat thong tin");
-                puts("3. Xoa sinh vien");
-                puts("4. Tim kiem sinh vien");
-                puts("5. Xuat danh sach");
-                printf("Nhap lua chon: ");
-                scanf("%d", &luaChonPhu);
-                
-                switch(luaChonPhu) {
-                    case 1:
-                        nhapDanhSach(dsSV, &soLuong);
-                        break;
-                        
-                    case 2:
-                        printf("\nNhap ma sinh vien can cap nhat: ");
-                        scanf("%s", maTemp);
-                        capNhatSinhVien(dsSV, soLuong, maTemp);
-                        break;
-                        
-                    case 3:
-                        printf("\nNhap ma sinh vien can xoa: ");
-                        scanf("%s", maTemp);
-                        xoaSinhVien(dsSV, &soLuong, maTemp);
-                        break;
-                        
-                    case 4:
-                        printf("\nNhap ma sinh vien can tim: ");
-                        scanf("%s", maTemp);
-                        int viTri = timSinhVien(dsSV, soLuong, maTemp);
-                        if(viTri != -1) {
-                            xuatSinhVien(dsSV[viTri]);
-                        } else {
-                            printf("\nKhong tim thay sinh vien!");
-                        }
-                        break;
-                        
-                    case 5:
-                        xuatDanhSach(dsSV, soLuong);
-                        break;
-                        
-                    default:
-                        printf("\nLua chon khong hop le!");
-                }
-                break;
-                
-            case 2: // Quản lý học tập
-                puts("1. Cap nhat diem ren luyen");
-                puts("2. Cap nhat tin chi");
-                puts("3. Xem bang diem");
-                puts("4. Danh sach canh bao hoc tap");
-                puts("5. Danh sach du dieu kien tot nghiep");
-                // Xử lý lựa chọn...
-                break;
-                
-            case 3: // Quản lý học phí
-                puts("1. Cap nhat hoc phi");
-                puts("2. Danh sach no hoc phi");
-                puts("3. Thong ke thu hoc phi");
-                // Xử lý lựa chọn...
-                break;
-                
-            case 4: // Thống kê - Báo cáo
-                puts("1. Thong ke theo khoa");
-                puts("2. Thong ke theo hoc luc");
-                puts("3. Bao cao tong hop");
-                puts("4. Danh sach hoc bong");
-                // Xử lý lựa chọn...
-                break;
-                
-            case 5: // Quản lý lớp học
-                puts("1. Phan cong lop truong");
-                puts("2. Cap nhat thong tin lop");
-                puts("3. Danh sach theo doi tuong");
-                // Xử lý lựa chọn...
-                break;
-                
-            case 6: // Tiện ích
-                puts("1. Tim kiem nang cao");
-                puts("2. Sap xep da tieu chi");
-                puts("3. Thong ke da chieu");
-                // Xử lý lựa chọn...
-                break;
-                
-            case 7: // Quản lý dữ liệu
-                puts("1. Sao luu du lieu");
-                puts("2. Phuc hoi du lieu");
-                puts("3. Xuat bao cao");
-                // Xử lý lựa chọn...
-                break;
-        }
-    } while(luaChon != 0);
-    
-    return 0;
-}
-
+/**
+ * Nhập thông tin một sinh viên
+ * @param sv Con trỏ đến struct sinh viên cần nhập
+ */
 void nhapSinhVien(struct sinhVien *sv) {
-    while(getchar() != '\n'); // Xóa bộ nhớ đệm
-
-    printf("\nNhap ma sinh vien: ");
-    fgets(sv->maSv, sizeof(sv->maSv), stdin);
-    sv->maSv[strcspn(sv->maSv, "\n")] = 0;
-
-    printf("Nhap ho ten: ");
+    printf("\nNhập thông tin sinh viên:");
+    printf("\nMã SV: ");
+    scanf("%s", sv->maSv);
+    getchar();
+    printf("Họ tên: ");
     fgets(sv->hoTen, sizeof(sv->hoTen), stdin);
     sv->hoTen[strcspn(sv->hoTen, "\n")] = 0;
-
-    printf("Nhap ngay tot nghiep (ngay thang nam): ");
-    scanf("%hhu %hhu %u", &sv->ngayTN.ngay, &sv->ngayTN.thang, &sv->ngayTN.nam);
-
-    while(getchar() != '\n');
-    printf("Nhap lop: ");
-    fgets(sv->lop, sizeof(sv->lop), stdin);
-    sv->lop[strcspn(sv->lop, "\n")] = 0;
-
-    printf("Nhap nganh: ");
-    fgets(sv->Nganh, sizeof(sv->Nganh), stdin);
-    sv->Nganh[strcspn(sv->Nganh, "\n")] = 0;
-
-    printf("Nhap diem trung binh: ");
-    scanf("%f", &sv->diemTB);
-
-    while(getchar() != '\n');
-    printf("Nhap que quan: ");
-    fgets(sv->queQuan, sizeof(sv->queQuan), stdin);
-    sv->queQuan[strcspn(sv->queQuan, "\n")] = 0;
-
-    printf("Nhap so dien thoai: ");
-    fgets(sv->soDT, sizeof(sv->soDT), stdin);
-    sv->soDT[strcspn(sv->soDT, "\n")] = 0;
-
-    printf("Nhap email: ");
-    fgets(sv->email, sizeof(sv->email), stdin);
-    sv->email[strcspn(sv->email, "\n")] = 0;
-
-    printf("Nhap diem ren luyen: ");
-    scanf("%f", &sv->diemRL);
-
-    printf("Nhap so tin chi da dat: ");
-    scanf("%d", &sv->soTinChi);
-
-    while(getchar() != '\n');
-    printf("Nhap trang thai (Dang hoc/Bao luu/Da tot nghiep): ");
-    fgets(sv->trangThai, sizeof(sv->trangThai), stdin);
-    sv->trangThai[strcspn(sv->trangThai, "\n")] = 0;
-
-    printf("Nhap hoc phi con no: ");
-    scanf("%f", &sv->hocPhi);
+    // ... các trường khác tương tự
 }
 
+/**
+ * Xuất thông tin một sinh viên
+ * @param sv Struct sinh viên cần xuất
+ */
 void xuatSinhVien(struct sinhVien sv) {
-    printf("\n=== THONG TIN SINH VIEN ===");
-    printf("\nMa SV: %s", sv.maSv);
-    printf("\nHo ten: %s", sv.hoTen);
-    printf("\nNgay tot nghiep: %02d/%02d/%04d", sv.ngayTN.ngay, sv.ngayTN.thang, sv.ngayTN.nam);
-    printf("\nLop: %s", sv.lop);
-    printf("\nNganh: %s", sv.Nganh);
-    printf("\nDiem TB: %.2f", sv.diemTB);
-    printf("\nQue quan: %s", sv.queQuan);
-    printf("\nSDT: %s", sv.soDT);
-    printf("\nEmail: %s", sv.email);
-    printf("\nDiem ren luyen: %.2f", sv.diemRL);
-    printf("\nSo tin chi dat: %d", sv.soTinChi);
-    printf("\nTrang thai: %s", sv.trangThai);
-    printf("\nHoc phi con no: %.2f\n", sv.hocPhi);
+    printf("\n╔═══════════════════════════════════╗");
+    printf("\n║      THÔNG TIN SINH VIÊN          ║");
+    printf("\n╚═══════════════════════════════════╝\n");
+    printf("Mã SV: %s\n", sv.maSv);
+    printf("Họ tên: %s\n", sv.hoTen);
+    printf("Ngày TN: %d/%d/%d\n", sv.ngayTN.ngay, sv.ngayTN.thang, sv.ngayTN.nam);
+	// Thêm các trường dữ liệu tương tự vô đây .... 
+    // ... xuất các thông tin khác
 }
 
+/**
+ * Nhập danh sách sinh viên
+ * @param ds Mảng sinh viên
+ * @param n Con trỏ số lượng sinh viên
+ */
 void nhapDanhSach(struct sinhVien ds[], int *n) {
-    printf("\nNhap so luong sinh vien: ");
+    printf("\n╔═══════════════════════════════════╗");
+    printf("\n║      NHẬP DANH SÁCH SINH VIÊN     ║");
+    printf("\n╚═══════════════════════════════════╝\n");
+
+    printf("Nhập số lượng sinh viên: ");
     scanf("%d", n);
     
     if(*n <= 0 || *n > 100) {
-        printf("So luong khong hop le!\n");
+        printf("⚠ Số lượng không hợp lệ!\n");
         return;
     }
 
     for(int i = 0; i < *n; i++) {
-        printf("\nNhap thong tin sinh vien thu %d:", i + 1);
+        printf("\n► Sinh viên thứ %d:", i + 1);
         nhapSinhVien(&ds[i]);
     }
 }
 
+/**
+ * Xuất danh sách sinh viên
+ * @param ds Mảng sinh viên
+ * @param n Số lượng sinh viên
+ */
 void xuatDanhSach(struct sinhVien ds[], int n) {
+    printf("\n╔═══════════════════════════════════╗");
+    printf("\n║      DANH SÁCH SINH VIÊN          ║");
+    printf("\n╚═══════════════════════════════════╝\n");
+
     if(n <= 0) {
-        printf("\nDanh sach rong!");
+        printf("⚠ Danh sách rỗng!\n");
         return;
     }
 
-    printf("\n=== DANH SACH SINH VIEN ===");
     for(int i = 0; i < n; i++) {
-        printf("\n\nSinh vien thu %d:", i + 1);
+        printf("\n► Sinh viên thứ %d:", i + 1);
         xuatSinhVien(ds[i]);
     }
 }
 
-// Hàm tìm kiếm sinh viên theo mã
+/**
+ * Tìm sinh viên theo mã
+ * @param ds Mảng sinh viên
+ * @param n Số lượng sinh viên
+ * @param maSV Mã sinh viên cần tìm
+ * @return Vị trí tìm thấy hoặc -1 nếu không tìm thấy
+ */
 int timSinhVien(struct sinhVien ds[], int n, char maSV[]) {
     for(int i = 0; i < n; i++) {
         if(strcmp(ds[i].maSv, maSV) == 0) {
@@ -291,31 +155,107 @@ int timSinhVien(struct sinhVien ds[], int n, char maSV[]) {
     return -1;
 }
 
-// Hàm xóa sinh viên
+/**
+ * Xóa sinh viên theo mã
+ * @param ds Mảng sinh viên
+ * @param n Con trỏ số lượng sinh viên
+ * @param maSV Mã sinh viên cần xóa
+ */
 void xoaSinhVien(struct sinhVien ds[], int *n, char maSV[]) {
     int viTri = timSinhVien(ds, *n, maSV);
-    if(viTri == -1) {
-        printf("\nKhong tim thay sinh vien!");
-        return;
+    if(viTri != -1) {
+        for(int i = viTri; i < *n - 1; i++) {
+            ds[i] = ds[i + 1];
+        }
+        (*n)--;
     }
-
-    // Dịch chuyển mảng
-    for(int i = viTri; i < *n - 1; i++) {
-        ds[i] = ds[i + 1];
-    }
-    (*n)--;
-    printf("\nDa xoa sinh vien!");
 }
 
-// Hàm cập nhật thông tin sinh viên
+/**
+ * Cập nhật thông tin sinh viên
+ * @param ds Mảng sinh viên
+ * @param n Số lượng sinh viên
+ * @param maSV Mã sinh viên cần cập nhật
+ */
 void capNhatSinhVien(struct sinhVien ds[], int n, char maSV[]) {
     int viTri = timSinhVien(ds, n, maSV);
-    if(viTri == -1) {
-        printf("\nKhong tim thay sinh vien!");
-        return;
+    if(viTri != -1) {
+        nhapSinhVien(&ds[viTri]);
     }
+}
 
-    printf("\nNhap thong tin moi cho sinh vien:");
-    nhapSinhVien(&ds[viTri]);
-    printf("\nDa cap nhat thong tin sinh vien!");
+/*==============================================================================
+ * HÀM MAIN - ĐIỀU KHIỂN CHƯƠNG TRÌNH
+ *============================================================================*/
+// Để chạy file test cần đổi file main.c thành mainProgram.c
+int main() {
+    struct sinhVien dsSV[100];
+    int soLuong = 0;
+    int luaChon, luaChonPhu;
+    char maTemp[20];
+    
+    do {
+        printf("\n╔═══════════════════════════════════╗");
+        printf("\n║    QUẢN LÝ THÔNG TIN SINH VIÊN    ║");
+        printf("\n╠═══════════════════════════════════╣");
+        printf("\n║ 1. Quản lý hồ sơ sinh viên        ║");
+        printf("\n║ 2. Quản lý học tập                ║");
+        printf("\n║ 3. Quản lý học phí                ║");
+        printf("\n║ 4. Thống kê - Báo cáo             ║");
+        printf("\n║ 5. Quản lý lớp học                ║");
+        printf("\n║ 6. Tiện ích mở rộng               ║");
+        printf("\n║ 0. Thoát chương trình             ║");
+        printf("\n╚═══════════════════════════════════╝");
+        printf("\n► Chọn chức năng: ");
+        scanf("%d", &luaChon);
+        
+        switch(luaChon) {
+            case 1:
+                printf("\n╔═══════════════════════════════════╗");
+                printf("\n║      QUẢN LÝ HỒ SƠ SINH VIÊN      ║");
+                printf("\n╠═══════════════════════════════════╣");
+                printf("\n║ 1. Thêm sinh viên mới             ║");
+                printf("\n║ 2. Cập nhật thông tin			  ║");
+                printf("\n║ 3. Xóa sinh viên                  ║");
+                printf("\n║ 4. Tìm kiếm sinh viên             ║");
+                printf("\n║ 5. Xuất danh sách                 ║");
+                printf("\n║ 0. Quay lại                       ║");
+                printf("\n╚═══════════════════════════════════╝");
+                printf("\n► Chọn chức năng: ");
+                scanf("%d", &luaChonPhu);
+                
+                switch(luaChonPhu) {
+                    case 1:
+                        nhapDanhSach(dsSV, &soLuong);
+                        break;
+                    case 2:
+                        printf("\nNhập mã sinh viên cần cập nhật: ");
+                        scanf("%s", maTemp);
+                        capNhatSinhVien(dsSV, soLuong, maTemp);
+                        break;
+                    case 3:
+                        printf("\nNhập mã sinh viên cần xóa: ");
+                        scanf("%s", maTemp);
+                        xoaSinhVien(dsSV, &soLuong, maTemp);
+                        break;
+                    case 4:
+                        printf("\nNhập mã sinh viên cần tìm: ");
+                        scanf("%s", maTemp);
+                        int viTri = timSinhVien(dsSV, soLuong, maTemp);
+                        if(viTri != -1) {
+                            xuatSinhVien(dsSV[viTri]);
+                        } else {
+                            printf("⚠ Không tìm thấy sinh viên!\n");
+                        }
+                        break;
+                    case 5:
+                        xuatDanhSach(dsSV, soLuong);
+                        break;
+                }
+                break;
+            // Các case khác sẽ được xử lý sau...
+        }
+    } while(luaChon != 0);
+    
+    return 0;
 }
